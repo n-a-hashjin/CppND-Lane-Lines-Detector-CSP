@@ -2,7 +2,12 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <vector>
-using namespace cv;
+
+using std::vector;
+using cv::Mat;
+using cv::Point3f;
+using cv::Point2f;
+
 CameraCalibration::CameraCalibration(std::string path, const int *chess_size) : path_{path}{
 
     chess_xsize_ = chess_size[0];
@@ -13,24 +18,44 @@ CameraCalibration::~CameraCalibration(){}
 
 void CameraCalibration::calibrate(){
     
-    Mat shot;
-    Mat grayscale;
-
+    Mat image, grayscale;
+    
     bool found;
-    std::vector<Point2f> corners;
+    vector<Point2f> corners;
+    vector<vector<Point2f>> image_points;
+
+    vector<Point3f> obj_point;
+    vector<vector<Point3f>> obj_points;
+
+    Mat camera_matrix = Mat::eye(3, 3, CV_64F);
+    Mat dist_coeffs = Mat::zeros(8, 1, CV_64F);
+    vector<Mat> rvecs, tvecs;
+
+    cv::Size board_size = cv::Size(chess_xsize_,chess_ysize_);
+
+    for (int i = 0; i < chess_ysize_; i++){
+        for (int j = 0; j < chess_xsize_; j++)
+        {
+            obj_point.emplace_back(Point3f(j, i, 0));
+        }
+    }
 
     samples_.setFilenames(path_);
     while (!samples_.empty())
     {
         std::string Filename = samples_.getNextfilename();
-        shot = imread(Filename);
-        cvtColor(shot, grayscale, COLOR_RGB2GRAY);
-        bool found = findChessboardCorners(grayscale, Size(chess_xsize_,chess_ysize_), corners, 3);
-        drawChessboardCorners(shot, Size(chess_xsize_,chess_ysize_), Mat(corners), found);
-        if (!found) std::cout << "No corners are found for '" << Filename << "'" << std::endl;
-        namedWindow("Show Image", 1);
-        imshow("Show Image", shot);
-        waitKey();
+        image = cv::imread(Filename);
+        cv::cvtColor(image, grayscale, cv::COLOR_RGB2GRAY);
+        bool found = cv::findChessboardCorners(grayscale, board_size, corners, 3);
+        if (found){
+            image_points.push_back(corners);
+            obj_points.push_back(obj_point);
+        }
+        
     }
-    std::cout << path_ << " chess size (x,y): (" << chess_xsize_ << ", " << chess_ysize_ << ")" <<std::endl;
+    
+    double rms = cv::calibrateCamera(obj_points, image_points, grayscale.size(), camera_matrix,
+                                                                    dist_coeffs, rvecs, tvecs);
+    image = cv::imread("../imgs/calibration2.jpg");
+    //cv::undistort(image, undistort_image, camera_matrix, dist_coeffs);
 }
