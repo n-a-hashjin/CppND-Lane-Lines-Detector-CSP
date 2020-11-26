@@ -34,13 +34,14 @@ int main() {
     vertices.push_back(top_right);
     vertices.push_back(top_left);
     
-    cv::Mat result;
+    cv::Mat result, imgf;
     ImageProcessing imgProc(vertices);
     imgProc.regionOfInterest(ppFrame, result);
 
     vector<cv::Vec4i> lines;
     imgProc.houghLines(result, lines);
-    cv::imshow("result", result);
+    imgProc.drawLaneLines(frame, lines);
+    cv::imshow("result", frame);
     cv::waitKey();
 
     /*

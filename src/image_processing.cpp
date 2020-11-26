@@ -52,3 +52,23 @@ void ImageProcessing::houghLines(Mat &frame, vector<cv::Vec4i> &lines){
     cv::waitKey();
     */
 }
+
+void ImageProcessing::drawLaneLines(Mat &src, vector<cv::Vec4i> &lines /*Mat &output*/){
+    //double alpha=0.7, beta=1;
+    //Mat drawedLineImg = Mat(src.size().height, src.size().width, CV_8UC3);
+    //std::cout << "src size, width and height: " << src.size() << " " << src.size().width << " " << src.size().height << std::endl;
+    //std::cout << "src size, width and height: " << drawedLineImg.size() << " " << drawedLineImg.size().width << " " << drawedLineImg.size().height << std::endl;
+    //cvtColor( src, drawedLineImg, cv::COLOR_GRAY2BGR );
+
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        cv::line( src, Point(lines[i][0], lines[i][1]),
+        Point( lines[i][2], lines[i][3]), cv::Scalar(0,0,255), 3, 8 );
+    }
+    cv::namedWindow( "Detected Lines", 1 );
+    cv::imshow( "Detected Lines", src );
+    cv::waitKey();
+    //output = drawedLineImg;
+    //cv::addWeighted( src, alpha, drawedLineImg, beta, 0.0, output);
+}
+

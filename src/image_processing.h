@@ -15,6 +15,7 @@ public:
     
     void regionOfInterest(Mat &frame, Mat &masked);
     void houghLines(Mat &frame, vector<cv::Vec4i> &lines);
+    void drawLaneLines(Mat &src, vector<cv::Vec4i> &lines);
 private:
     std::vector<Point> vertices_;
 };
