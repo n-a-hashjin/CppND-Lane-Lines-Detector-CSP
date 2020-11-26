@@ -12,7 +12,9 @@ class ImageProcessing
 public:
     ImageProcessing(vector<vector<int>> vertices);
     ~ImageProcessing();
+    
     void regionOfInterest(Mat &frame, Mat &masked);
+    void houghLines(Mat &frame, vector<cv::Vec4i> &lines);
 private:
     std::vector<Point> vertices_;
 };

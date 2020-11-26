@@ -10,14 +10,6 @@
 #include <vector>
 
 
-enum Param {
-    rho=2,
-    theta = 1,
-    threshold = 15,
-    min_len = 40,
-    max_gap = 20,
-};
-
 int main() {
     
     unsigned int usecs{1000000};
@@ -45,10 +37,12 @@ int main() {
     cv::Mat result;
     ImageProcessing imgProc(vertices);
     imgProc.regionOfInterest(ppFrame, result);
-    std::cout << "size of original frame: " << ppFrame.size() << std::endl;
-    std::cout << "size of original result: " << result.size() << std::endl;
+
+    vector<cv::Vec4i> lines;
+    imgProc.houghLines(result, lines);
     cv::imshow("result", result);
     cv::waitKey();
+
     /*
     std::string path = "../imgs/";
     unsigned int chess_size[2] = {9,6};

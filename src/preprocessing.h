@@ -8,7 +8,7 @@ class preprocessing : CameraCalibration
 public:
     preprocessing();
     ~preprocessing();
-    void runPreprocessing(Mat input, Mat &cannyImage);
+    void runPreprocessing(Mat &input, Mat &cannyImage);
 private:
     void gaussian_blur(Mat &image, Mat &blurredImage, cv::Size kernelSize);
     void canny(Mat &image, Mat &cannyImage,double low_threshold,double high_threshold);

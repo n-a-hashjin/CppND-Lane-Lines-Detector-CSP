@@ -8,7 +8,7 @@ preprocessing::preprocessing(){
 
 preprocessing::~preprocessing(){}
 
-void preprocessing::runPreprocessing(Mat input, Mat &cannyImage){
+void preprocessing::runPreprocessing(Mat &input, Mat &cannyImage){
     cv::namedWindow("Before", 1);
     imshow("Before", input);
     cv::waitKey();
